@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Jabatan {
+  KD_JABATAN Int    @id @default(autoincrement())
+  JABATAN    String
+
+  Karyawan Karyawan[]
+}
+
+model Status {
+  KD_STATUS Int        @id @default(autoincrement())
+  STATUS    String
+  Karyawan  Karyawan[]
+}
+
+model Karyawan {
+  id         Int     @id @default(autoincrement())
+  NAMA       String
+  ALAMAT     String
+  jabatan    Jabatan @relation(fields: [JABATAN_ID], references: [KD_JABATAN])
+  JABATAN_ID Int
+  status     Status  @relation(fields: [STATUS_ID], references: [KD_STATUS])
+  STATUS_ID  Int
+  absensi    Absensi @relation(fields: [ABSENSI_ID], references: [NIP])
+  ABSENSI_ID Int
+}
+
+model Absensi {
+  NIP        Int        @id @default(autoincrement())
+  TGL_ABSEN  String
+  JAM_MASUK  String
+  JAM_KELUAR String
+  Karyawan   Karyawan[]
+}
